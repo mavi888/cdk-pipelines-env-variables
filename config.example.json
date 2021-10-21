@@ -1,0 +1,28 @@
+{
+    "cdk_pipeline": {
+        "pipeline_name": "CDKPipelineEnvVar",
+        "repository_name": "<repo name>",
+        "repository_owner": "<owner name>",
+        "branch": "main",
+        "build_environment": {
+            "account": "<account id>",
+            "region": "<region>"
+        }
+    },
+    "environments": {
+        "dev": {
+            "name": "dev",
+            "env": {
+                "account": "<account id>",
+                "region": "<region>"
+            }
+        },
+        "production": {
+            "name": "prod",
+            "env": {
+                "account": "<account id>",
+                "region": "<region>"
+            }
+        }
+    }
+}

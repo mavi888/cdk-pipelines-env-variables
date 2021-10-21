@@ -5,6 +5,8 @@ import { CdkPipeline, SimpleSynthAction } from "@aws-cdk/pipelines";
 import { CdkpipelinesDemoStage} from './cdkpipelines-demo-stage';
 import { ShellScriptAction } from '@aws-cdk/pipelines';
 
+import * as config from '../config.json'  
+
 /**
  * The stack that defines the application pipeline
  */
@@ -15,19 +17,19 @@ import { ShellScriptAction } from '@aws-cdk/pipelines';
       const sourceArtifact = new codepipeline.Artifact();
       const cloudAssemblyArtifact = new codepipeline.Artifact();
 
-      const pipeline = new CdkPipeline(this, 'Pipeline', {
+      const pipeline = new CdkPipeline(this, 'AWSCDKPipeline', {
         // The pipeline name
-        pipelineName: 'MyServicePipeline',
+        pipelineName: config.cdk_pipeline.pipeline_name,
         cloudAssemblyArtifact,
 
         // Where the source can be found
         sourceAction: new codepipeline_actions.GitHubSourceAction({
-        actionName: 'GitHub',
-        output: sourceArtifact,
-        oauthToken: SecretValue.secretsManager('github-token'),
-        owner: 'GITHUB-USER',
-        repo: 'REPO',
-        branch: 'main'
+          actionName: 'GitHub',
+          output: sourceArtifact,
+          oauthToken: SecretValue.secretsManager('github-token'),
+          owner: config.cdk_pipeline.repository_owner,
+          repo: config.cdk_pipeline.repository_name,
+          branch: config.cdk_pipeline.branch
       }),
 
       // How it will be built and synthesized
@@ -41,7 +43,7 @@ import { ShellScriptAction } from '@aws-cdk/pipelines';
    });
    // This is where we add the application stages
    const preprod = new CdkpipelinesDemoStage(this, 'PreProd', {
-    env: { account: 'ACCOUNT-NUMBER', region: 'REGION' }
+    env: { account: config.environments.dev.env.account, region: config.environments.dev.env.region }
   });
 
   // put validations for the stages 
@@ -61,7 +63,7 @@ import { ShellScriptAction } from '@aws-cdk/pipelines';
   }));
 
   pipeline.addApplicationStage(new CdkpipelinesDemoStage(this, 'Prod', {
-    env: { account: 'ACCOUNT-NUMBER', region: 'REGION' }
+    env: { account: config.environments.production.env.account, region: config.environments.production.env.region }
   }));
   }
 }
