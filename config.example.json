@@ -10,6 +10,12 @@
         }
     },
     "environments": {
+        "personal": {
+            "env": {
+                "account":"<account id>",
+                "region": "<region>"
+            }
+        },
         "dev": {
             "name": "dev",
             "env": {
